@@ -20,7 +20,7 @@
       </div>
       <br />
       <div>
-      <Button label="Ingresar" icon="pi pi-check" />
+      <Button   label="Ingresar" icon="pi pi-check" > <router-link  to="/home">Ingresar</router-link></Button>
       </div>
       <br />
     </Panel>
