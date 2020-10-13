@@ -1,17 +1,6 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-
-  <div class="p-grid p-fluid">
-    <div class="p-col-12 p-md-4">
-        <div class="p-inputgroup">
-        <span class="p-inputgroup-addon">
-            <i class="pi pi-user"></i>
-        </span>
-            <InputText placeholder="Username" />
-        </div>
-    </div>
-    </div>
   </div>
 </template>
 
