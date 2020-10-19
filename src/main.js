@@ -8,6 +8,7 @@ import DataTable from 'primevue/datatable';
 import Dialog from 'primevue/dialog';
 import Menubar from 'primevue/menubar';
 import Column from 'primevue/column';
+import Carousel from 'primevue/carousel';
 
 import 'primevue/resources/themes/nova/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -22,6 +23,7 @@ Vue.component('Button', Button);
 Vue.component('Dialog', Dialog);
 Vue.component('Menubar', Menubar);
 Vue.component('Column', Column);
+Vue.component('Carousel', Carousel)
 
 new Vue({
   router,

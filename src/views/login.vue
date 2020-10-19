@@ -20,7 +20,7 @@
       </div>
       <br />
       <div>
-      <Button   label="Ingresar" icon="pi pi-check" > <router-link  to="/home">Ingresar</router-link></Button>
+       <router-link tag="p" to="/home"><Button label="Ingresar" icon="pi pi-check" /></router-link>
       </div>
       <br />
     </Panel>
@@ -33,5 +33,5 @@ export default {
 };
 </script>
  
- <style scoped>
+ <style>
 </style>

@@ -3,14 +3,19 @@
   <Panel header="Gestion de Productos">
       <Menubar :model="items" />
       <br />
-      <DataTable :value="productos" :paginator="true" :rows="10">
+      <DataTable :value="productos" :paginator="true" :rows="10" :selection.sync="selectproducto" selectionMode="single" dataKey="idProducto">
+        <Column field="idProducto" header="ID"></Column>
         <Column field="descripcion" header="Descripcion"></Column>
         <Column field="cantidad" header="Cantidad"></Column>
         <Column field="valor" header="Valor"></Column>
-        <Column field="imgurl" header="Imagen"></Column>
+        <Column header="Imagen">
+            <template #body="slotProps">
+            <img :src="slotProps.data.imgurl" :alt="slotProps.data.imgurl" class="product-image" />
+        </template>
+    </Column>
       </DataTable>
     </Panel>
-    <Dialog header="Crear Producto" :visible.sync="displayModal" :modal="true">
+    <Dialog header="Crear Producto" :visible.sync="displayModal" :modal="true" >
       <span class="p-float-label">
         <InputText id="descripcion" type="text" v-model="producto.descripcion" style="width: 100%" />
         <label for="descripcion">Descripcion</label>
@@ -35,8 +40,36 @@
         <Button label="Cancelar" icon="pi pi-times" @click="closeModal" class="p-button-secondary" />
       </template>
     </Dialog>
+
+    <Dialog header="Editar Producto" :visible.sync="editModal" :modal="true" >
+      <span class="p-float-label">
+        <InputText id="descripcion" type="text" v-model="producto.descripcion" style="width: 100%" />
+        <label for="descripcion">Descripcion</label>
+      </span>
+      <br />
+      <span class="p-float-label">
+        <InputText id="cantidad" type="text" v-model="producto.cantidad" style="width: 100%" />
+        <label for="cantidad">Cantidad</label>
+      </span>
+      <br />
+      <span class="p-float-label">
+        <InputText id="valor" type="text" v-model="producto.valor" style="width: 100%" />
+        <label for="valor">Valor Unitario</label>
+      </span>
+      <br />
+      <span class="p-float-label">
+        <InputText id="imagen" type="text" v-model="producto.imgurl" style="width: 100%" />
+        <label for="imagen">Imagen</label>
+      </span>
+      <template #footer>
+        <Button label="Guardar" icon="pi pi-check" @click="save" />
+        <Button label="Cancelar" icon="pi pi-times" @click="closeEdit" class="p-button-secondary" />
+      </template>
+    </Dialog>
+
 </div>
 </template>
+
 <script>
 import ProductoServices from "../service/ProductoServices";
 export default {
@@ -45,6 +78,14 @@ export default {
     return {
       productos: null,
       producto: {
+        idProducto: null,
+        descripcion: null,
+        cantidad: null,
+        valor: null,
+        imgurl: null
+      },
+      selectproducto: {
+        idProducto: null,
         descripcion: null,
         cantidad: null,
         valor: null,
@@ -60,7 +101,10 @@ export default {
         },
         {
           label: "Editar",
-          icon: "pi pi-fw pi-pencil"
+          icon: "pi pi-fw pi-pencil",
+          command: () => {
+            this.showEditModal();
+          }
         },
         {
           label: "Eliminar",
@@ -74,7 +118,13 @@ export default {
           }
         }
       ],
-      displayModal: false
+      messages: [
+			{severity: 'info', content: 'Dynamic Info Message'},
+			{severity: 'success', content: 'Dynamic Success Message'},
+			{severity: 'warn', content: 'Dynamic Warning Message'}
+		],
+      displayModal: false,
+      editModal: false
     };
   },
   productoServices: null,
@@ -88,6 +138,10 @@ export default {
     showSaveModal() {
       this.displayModal = true;
     },
+    showEditModal(){
+      this.producto = this.selectproducto;
+      this.editModal = true;
+    },
     getAll() {
       this.productoServices.getAll().then(data => {
         this.productos = data.data;
@@ -97,19 +151,31 @@ export default {
       this.productoServices.save(this.producto).then(data => {
         if (data.status === 200) {
           this.displayModal = false;
+          this.editModal = false;
           this.producto = {
             descripcion: null,
             cantidad: null,
             valor: null,
             imgurl: null
           };
+          alert("guardado!");
           this.getAll();
         }
       });
     },
     closeModal() {
       this.displayModal = false;
+    },
+    closeEdit() {
+      this.editModal = false;
     }
   }
 };
 </script>
+
+<style>
+.product-image {
+    width: 100px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+}
+</style>

@@ -11,4 +11,8 @@ export default class ProductoService {
     save(producto) {
         return axios.post(this.url + "insert", producto)
     }
+
+    update(producto) {
+        return axios.put(this.url + "update", producto)
+    }
 }
