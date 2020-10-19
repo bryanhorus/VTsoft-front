@@ -12,7 +12,7 @@ export default class ProductoService {
         return axios.post(this.url + "insert", producto)
     }
 
-    update(producto) {
-        return axios.put(this.url + "update", producto)
+    delete(id) {
+        return axios.delete(this.url + "delete/id?id="+ id)
     }
 }

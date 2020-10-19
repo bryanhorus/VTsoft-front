@@ -1,5 +1,6 @@
 <template>
 <div style="margin: 0 auto; width: 80%">
+  <Toast />
   <Panel header="Gestion de Productos">
       <Menubar :model="items" />
       <br />
@@ -62,7 +63,7 @@
         <label for="imagen">Imagen</label>
       </span>
       <template #footer>
-        <Button label="Guardar" icon="pi pi-check" @click="save" />
+        <Button label="Guardar" icon="pi pi-check" @click="update" />
         <Button label="Cancelar" icon="pi pi-times" @click="closeEdit" class="p-button-secondary" />
       </template>
     </Dialog>
@@ -108,7 +109,10 @@ export default {
         },
         {
           label: "Eliminar",
-          icon: "pi pi-fw pi-trash"
+          icon: "pi pi-fw pi-trash",
+          command: () => {
+            this.delete();
+          }
         },
         {
           label: "Refrescar",
@@ -118,11 +122,6 @@ export default {
           }
         }
       ],
-      messages: [
-			{severity: 'info', content: 'Dynamic Info Message'},
-			{severity: 'success', content: 'Dynamic Success Message'},
-			{severity: 'warn', content: 'Dynamic Warning Message'}
-		],
       displayModal: false,
       editModal: false
     };
@@ -147,6 +146,16 @@ export default {
         this.productos = data.data;
       });
     },
+    delete(){
+      if(confirm("desea eliminar el registro?")){
+      this.productoServices.delete(this.selectproducto.idProducto).then(data =>{
+        if(data.status === 200){
+           this.$toast.add({severity:'success', summary: 'Eliminado!', detail:'El registro se elimino correctamente', life: 3000});
+          this.getAll();
+        }
+      });
+      }
+    },
     save() {
       this.productoServices.save(this.producto).then(data => {
         if (data.status === 200) {
@@ -158,7 +167,22 @@ export default {
             valor: null,
             imgurl: null
           };
-          alert("guardado!");
+          this.$toast.add({severity:'success', summary: 'Creado!', detail:'El registro se creo correctamente', life: 3000});
+          this.getAll();
+        }
+      });
+    },
+    update() {
+      this.productoServices.save(this.producto).then(data => {
+        if (data.status === 200) {
+          this.editModal = false;
+          this.producto = {
+            descripcion: null,
+            cantidad: null,
+            valor: null,
+            imgurl: null
+          };
+          this.$toast.add({severity:'success', summary: 'Actualizacion!', detail:'Registro actualizado correctamente', life: 3000});
           this.getAll();
         }
       });

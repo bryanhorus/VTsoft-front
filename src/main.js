@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import ToastService from 'primevue/toastservice';
 
 import InputText from 'primevue/inputtext';
 import Panel from 'primevue/panel';
@@ -9,6 +10,7 @@ import Dialog from 'primevue/dialog';
 import Menubar from 'primevue/menubar';
 import Column from 'primevue/column';
 import Carousel from 'primevue/carousel';
+import Toast from 'primevue/toast';
 
 import 'primevue/resources/themes/nova/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -23,7 +25,10 @@ Vue.component('Button', Button);
 Vue.component('Dialog', Dialog);
 Vue.component('Menubar', Menubar);
 Vue.component('Column', Column);
-Vue.component('Carousel', Carousel)
+Vue.component('Carousel', Carousel);
+Vue.component('Toast', Toast)
+
+Vue.use(ToastService);
 
 new Vue({
   router,
