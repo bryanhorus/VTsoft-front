@@ -4,9 +4,12 @@
   <Panel header="Gestion de Productos">
       <Menubar :model="items" />
       <br />
-      <DataTable :value="productos" :paginator="true" :rows="10" :selection.sync="selectproducto" selectionMode="single" dataKey="idProducto">
+      <DataTable :value="productos" :paginator="true" :rows="10" :selection.sync="selectproducto" :filters="filters" selectionMode="single"  dataKey="idProducto" :metaKeySelection="false">
+  
         <Column field="idProducto" header="ID"></Column>
-        <Column field="descripcion" header="Descripcion"></Column>
+        <Column field="descripcion" header="Descripcion"> <template #filter>
+            <InputText type="text" v-model="filters['descripcion']" class="p-column-filter" placeholder="Buscar producto"/>
+        </template> </Column>
         <Column field="cantidad" header="Cantidad"></Column>
         <Column field="valor" header="Valor"></Column>
         <Column header="Imagen">
@@ -78,6 +81,8 @@ export default {
   data() {
     return {
       productos: null,
+      selectedProducts: null,
+      filters: {},
       producto: {
         idProducto: null,
         descripcion: null,
@@ -104,14 +109,23 @@ export default {
           label: "Editar",
           icon: "pi pi-fw pi-pencil",
           command: () => {
-            this.showEditModal();
+            if(this.selectproducto.idProducto != null){
+              this.showEditModal();
+              }else{
+               this.$toast.add({severity:'error', summary: 'Error!', detail:'Seleccione un producto de la lista para ejecutar la accion.', life: 3000});
+            }
+
           }
         },
         {
           label: "Eliminar",
           icon: "pi pi-fw pi-trash",
           command: () => {
+            if(this.selectproducto.idProducto != null){
             this.delete();
+            }else{
+               this.$toast.add({severity:'error', summary: 'Error!', detail:'Seleccione un producto de la lista para ejecutar la accion.', life: 3000});
+            }
           }
         },
         {
@@ -119,6 +133,7 @@ export default {
           icon: "pi pi-fw pi-refresh",
           command: () => {
             this.getAll();
+            location.reload();
           }
         }
       ],
@@ -138,8 +153,10 @@ export default {
       this.displayModal = true;
     },
     showEditModal(){
-      this.producto = this.selectproducto;
-      this.editModal = true;
+
+    this.producto = this.selectproducto;
+    this.editModal = true;
+
     },
     getAll() {
       this.productoServices.getAll().then(data => {
@@ -150,8 +167,9 @@ export default {
       if(confirm("desea eliminar el registro?")){
       this.productoServices.delete(this.selectproducto.idProducto).then(data =>{
         if(data.status === 200){
-           this.$toast.add({severity:'success', summary: 'Eliminado!', detail:'El registro se elimino correctamente', life: 3000});
+           this.$toast.add({severity:'success', summary: 'Eliminado!', detail:'El registro se elimino correctamente.', life: 3000});
           this.getAll();
+          location.reload();
         }
       });
       }
@@ -167,8 +185,9 @@ export default {
             valor: null,
             imgurl: null
           };
-          this.$toast.add({severity:'success', summary: 'Creado!', detail:'El registro se creo correctamente', life: 3000});
+          this.$toast.add({severity:'success', summary: 'Creado!', detail:'El registro se creo correctamente.', life: 3000});
           this.getAll();
+          location.reload();
         }
       });
     },
@@ -182,8 +201,9 @@ export default {
             valor: null,
             imgurl: null
           };
-          this.$toast.add({severity:'success', summary: 'Actualizacion!', detail:'Registro actualizado correctamente', life: 3000});
+          this.$toast.add({severity:'success', summary: 'Actualizacion!', detail:'Registro actualizado correctamente.', life: 3000});
           this.getAll();
+          location.reload();
         }
       });
     },
@@ -201,5 +221,8 @@ export default {
 .product-image {
     width: 100px;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+}
+.p-column-filter{
+  width: 160px;
 }
 </style>
